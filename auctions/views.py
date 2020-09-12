@@ -45,7 +45,11 @@ def login_view(request):
         return render(request, "auctions/login.html")
 
 def watchlist(request):
-    return render(request, "auctions/watchlist.html")
+    if "watchlist" not in request.session:
+        request.session["tasks"]=[]
+    return render(request,"auctions/watchlist.html",{
+        "watchlist":request.session["watchlist"]
+    })
 
 def logout_view(request):
     logout(request)

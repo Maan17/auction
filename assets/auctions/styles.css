@@ -6,3 +6,7 @@ body {
     max-width:50%;
     height:auto;
 }
+
+.glyphicon-plus{
+    color:"black";
+}
