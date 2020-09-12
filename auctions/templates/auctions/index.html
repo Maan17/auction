@@ -1,0 +1,20 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    <table>
+        {% for info in infos %}
+        <tr>
+            <td id="img-col">
+                <a href="{% url 'details' title=info.title %}"><img src="{{ info.image.url }}"></a>
+            </td>
+            <td id="right-col">
+                <a href="{% url 'details' title=info.title %}"><h5>{{ info.title }}</h5></a>
+                <p>{{ info.desc }}</p>
+                <h6>Price: ${{ info.initial_amt }}</h6>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}

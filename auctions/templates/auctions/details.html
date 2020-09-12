@@ -1,0 +1,17 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Active Listings</h2>
+    <table>
+        <tr>
+            <td id="img-col">
+                <img src="{{ info.image.url }}">
+            </td>
+            <td id="right-col">
+                <h5>{{ info.title }}</h5>
+                <p>{{ info.desc }}</p>
+                <h6>Price: ${{ info.initial_amt }}</h6>
+            </td>
+        </tr>
+    </table>
+{% endblock %}
