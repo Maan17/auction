@@ -1,0 +1,19 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Watchlist</h2>
+    <table>
+        {% for items in item %}
+        <tr>
+            <td id="img-col">
+                <img src="{{ items.image.url }}">
+            </td>
+            <td id="right-col">
+                <h5>{{ items.title }}</h5>
+                <p>{{ items.desc }}</p>
+                <h6>Price: ${{ items.initial_amt }}</h6>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

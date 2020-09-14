@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse
-from .models import listing
+from .models import listing,Watchlist
 from .forms import listingForm
 
 from .models import User,listing
@@ -22,9 +22,30 @@ def create(request):
     else:
        return render(request, 'auctions/create.html', {'form': form})
 
-def details(request,title):
-    detail=get_object_or_404(listing,title=title)
-    return render(request,'auctions/details.html',{'info':detail,'title':title })
+def details(request,product_id):
+    detail=get_object_or_404(listing,pk=product_id)
+    return render(request,'auctions/details.html',{'info':detail})
+
+def watchlist(request):
+    # Get the current user watchlist
+    current_user_watchlist, created = Watchlist.objects.get_or_create(user = request.user)
+    # Get all items connected to that user watchlist
+    items_in_watchlist = current_user_watchlist.item.all()
+    return render(request, "auctions/watchlist.html", {"item": items_in_watchlist})
+
+def watchlist_add(request, product_id):
+    item_to_save = get_object_or_404(listing, pk=product_id)
+    # Check if the item already exists in that user watchlist
+    #if Watchlist.objects.filter(user=request.user, item=item_id).exists():
+        #messages.add_message(request, messages.ERROR, "You already have it in your watchlist.")
+        #return HttpResponseRedirect(reverse("auctions:index"))
+    # Get the user watchlist or create it if it doesn't exists
+    user_list, created = Watchlist.objects.get_or_create(user=request.user)
+    # Add the item through the ManyToManyField (Watchlist => item)
+    user_list.item.add(item_to_save)
+    #messages.add_message(request, messages.SUCCESS, "Successfully added to your watchlist")
+    return HttpResponseRedirect(reverse("index"))
+
 
 def login_view(request):
     if request.method == "POST":
@@ -43,13 +64,6 @@ def login_view(request):
             })
     else:
         return render(request, "auctions/login.html")
-
-def watchlist(request):
-    if "watchlist" not in request.session:
-        request.session["tasks"]=[]
-    return render(request,"auctions/watchlist.html",{
-        "watchlist":request.session["watchlist"]
-    })
 
 def logout_view(request):
     logout(request)
