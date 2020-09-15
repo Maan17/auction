@@ -24,7 +24,16 @@ def create(request):
 
 def details(request,product_id):
     detail=get_object_or_404(listing,pk=product_id)
-    return render(request,'auctions/details.html',{'info':detail})
+    if request.user.is_authenticated:
+        delete=Watchlist.objects.filter(user=request.user, item=product_id)
+        return render(request,'auctions/details.html',{
+        'info':detail,
+        'del':delete,
+        })
+    else: 
+        return render(request,'auctions/details.html',{
+            'info':detail,
+            })
 
 def watchlist(request):
     # Get the current user watchlist
@@ -35,17 +44,16 @@ def watchlist(request):
 
 def watchlist_add(request, product_id):
     item_to_save = get_object_or_404(listing, pk=product_id)
-    # Check if the item already exists in that user watchlist
-    #if Watchlist.objects.filter(user=request.user, item=item_id).exists():
-        #messages.add_message(request, messages.ERROR, "You already have it in your watchlist.")
-        #return HttpResponseRedirect(reverse("auctions:index"))
-    # Get the user watchlist or create it if it doesn't exists
     user_list, created = Watchlist.objects.get_or_create(user=request.user)
-    # Add the item through the ManyToManyField (Watchlist => item)
     user_list.item.add(item_to_save)
     #messages.add_message(request, messages.SUCCESS, "Successfully added to your watchlist")
     return HttpResponseRedirect(reverse("index"))
 
+def watchlist_del(request,product_id):
+    item_to_del=get_object_or_404(listing, pk=product_id)
+    user_list= Watchlist.objects.get(user=request.user)
+    user_list.item.remove(item_to_del)
+    return HttpResponseRedirect(reverse("index"))
 
 def login_view(request):
     if request.method == "POST":

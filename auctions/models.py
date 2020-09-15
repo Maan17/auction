@@ -25,7 +25,9 @@ class listing(models.Model):
         return f"Item ID: {self.id} | Title: {self.title}"
 
 class bid(models.Model):
-    pass
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,default=1)
+    item = models.ManyToManyField(listing)
+    amount=models.IntegerField(default=0)
 
 class comment(models.Model):
     pass             
