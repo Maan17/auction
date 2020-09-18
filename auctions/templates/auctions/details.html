@@ -10,9 +10,30 @@
             <td id="right-col">
                 <h5>{{ info.title }}</h5>
                 <p>{{ info.desc }}</p>
-                <h6>Price: ${{ info.initial_amt }}</h6>
+                <tr>
+                    <td>
+                        <h6>Starting Bid: ${{ info.initial_amt }}</h6>
+                    </td>
+                    <td>
+                        <h6>Current Bid: ${{ current }}</h6>
+                    </td>
+                </tr>
                 {% if user.is_authenticated %}
-                    <a class="btn btn-primary btn-sm" href="#" role="button">Place bid</a>
+                <form action="{% url 'bid' info.id %}" enctype="multipart/form-data" method="POST">
+                    {% csrf_token %}{% for field in amt %}{% load widget_tweaks %}
+                    <div class="form-group row">
+                        <label class="col-3 col-form-label" name="compare" for="{{ field.id_for_label }}">Your Bid: </label>
+                        <div class="col-9">
+                            {{ field |add_class:"form-control"}}
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="form-group row">
+                        <div class="col-sm-10">
+                            <button type="submit" class="btn btn-primary btn-sm">Place Bid</button>
+                        </div>
+                    </div>
+                </form>
                     {% if del %}
                         <a href="{% url 'watchlist_del' info.id %}" role="button" class="btn btn-outline-primary btn-sm">
                             <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus" fill="currentColor" xmlns="http://www.w3.org/2000/svg">

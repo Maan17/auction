@@ -1,13 +1,11 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse
-from .models import listing,Watchlist
-from .forms import listingForm
-
-from .models import User,listing
-
+from .models import listing,Watchlist,Bid,User
+from .forms import listingForm,BidForm
+from django.contrib import messages
 
 def index(request):
     infos=listing.objects.all()
@@ -26,19 +24,48 @@ def details(request,product_id):
     detail=get_object_or_404(listing,pk=product_id)
     if request.user.is_authenticated:
         delete=Watchlist.objects.filter(user=request.user, item=product_id)
+        amt=BidForm()
+        user=User.objects.filter(username=request.user)
+        if Bid.objects.filter(user__in=user, item__id=product_id).exists():
+            maxi=Bid.objects.filter(user__in=user, item__id=product_id).last()
+            current_price=maxi.amount
+        else:
+            start=get_object_or_404(listing,pk=product_id)
+            current_price=start.initial_amt
         return render(request,'auctions/details.html',{
         'info':detail,
         'del':delete,
+        'amt':amt,
+        'current':current_price,
         })
     else: 
         return render(request,'auctions/details.html',{
             'info':detail,
             })
 
+def bid(request,product_id):
+    listi = listing.objects.get(pk=product_id)
+    if request.method == "POST":
+        bidi = Bid(user=request.user, item=listi)
+        bidform = BidForm(request.POST, instance=bidi)        
+        user=User.objects.filter(username=request.user)
+        maxi=Bid.objects.filter(user__in=user, item__id=product_id).last()
+        current_price=maxi.amount
+        if bidform.is_valid():
+            bidform.save()
+            if Bid.objects.filter(user__in=user, item__id=product_id).exists():
+                res=Bid.objects.filter(user__in=user, item__id=product_id).last()
+                response=res.amount
+                if current_price>response:
+                    res.delete()
+                    return HttpResponseNotFound('<h1>Place greater bid</h1>')
+        else:
+            bidform=BidForm(instance=bidi)
+            return details(request, product_id)
+    return HttpResponseRedirect(reverse("details", args=(product_id,)))
+
 def watchlist(request):
-    # Get the current user watchlist
     current_user_watchlist, created = Watchlist.objects.get_or_create(user = request.user)
-    # Get all items connected to that user watchlist
     items_in_watchlist = current_user_watchlist.item.all()
     return render(request, "auctions/watchlist.html", {"item": items_in_watchlist})
 

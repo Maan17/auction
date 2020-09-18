@@ -18,16 +18,20 @@ class User(AbstractUser):
 class listing(models.Model):
     title=models.CharField(max_length=50)
     desc=models.TextField()
+    active=models.BooleanField(default="True")
+    winner=models.CharField(max_length=64,default="")
     initial_amt=models.IntegerField()
     image=models.ImageField(upload_to='product')
     category=models.CharField(max_length = 20, choices =CHOICES)
     def __str__(self):
         return f"Item ID: {self.id} | Title: {self.title}"
 
-class bid(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE,default=1)
-    item = models.ManyToManyField(listing)
-    amount=models.IntegerField(default=0)
+class Bid(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    item = models.ForeignKey(listing, on_delete=models.CASCADE,null=True)
+    amount=models.IntegerField()
+    def __str__(self):
+        return f"Item: {self.item} | User: {self.user}"
 
 class comment(models.Model):
     pass             
