@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 CHOICES =( 
     ("1", "Fashion"), 
@@ -16,6 +17,7 @@ class User(AbstractUser):
 
 
 class listing(models.Model):
+    owner=models.CharField(max_length=64,default="")
     title=models.CharField(max_length=50)
     desc=models.TextField()
     active=models.BooleanField(default="True")
@@ -33,8 +35,11 @@ class Bid(models.Model):
     def __str__(self):
         return f"Item: {self.item} | User: {self.user}"
 
-class comment(models.Model):
-    pass             
+class Comment(models.Model):
+    user=models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    item=models.ForeignKey(listing,on_delete=models.CASCADE)     
+    comment=models.TextField()
+    date=models.DateTimeField(default=timezone.now)  
 
 class Watchlist(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
