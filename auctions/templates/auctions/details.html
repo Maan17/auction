@@ -68,6 +68,22 @@
                             <h4 class="alert-heading">Bid Closed</h4>
                         </div>  
                     {% endif %}
+                        <form action="{% url 'add_comment' info.id %}" enctype="multipart/form-data" method="POST">
+                            {% for comment in comment %}{% load widget_tweaks %}
+                                <div class="form-group">
+                                    <label for="{{ comment.id_for_label }}">Add Comment</label>{% csrf_token %}
+                                    {{ comment | add_class:"form-control"}}
+                                </div>
+                            {% endfor %}
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-primary">Post</button>
+                                </div>
+                        </form>
+                        <h4>Comments</h4>
+                        {% for comm in comm %}
+                            <h5>{{ comm.user }}</h5>
+                            <h6>{{ comm.comment }}</h6>
+                        {% endfor %}  
                 {% endif %}
             </td>
         </tr>

@@ -3,8 +3,8 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse
-from .models import listing,Watchlist,Bid,User
-from .forms import listingForm,BidForm
+from .models import listing,Watchlist,Bid,User,Comment
+from .forms import listingForm,BidForm,CommentForm
 from django.contrib import messages
 
 def index(request):
@@ -12,7 +12,7 @@ def index(request):
     return render(request, "auctions/index.html",{'infos':infos})
 
 def create(request):
-    infos=listing.objects.all()
+    infos=listing.objects.all(active=True)
     form = listingForm(request.POST, request.FILES)
     if form.is_valid():
         item = form.save(commit=False)
@@ -28,12 +28,17 @@ def all_listings(request):
 
 def details(request,product_id):
     detail=get_object_or_404(listing,pk=product_id)
+    if Comment.objects.filter(item_id=product_id).exists():
+        comm=Comment.objects.filter(item_id=product_id)
+    else:
+        comm=None
     owner=False
     win=False
     active=False
     if request.user.is_authenticated:
         delete=Watchlist.objects.filter(user=request.user, item=product_id)
         amt=BidForm()
+        comment=CommentForm()
         if request.user.username == detail.owner:
             owner=True
         if Bid.objects.filter(item__id=product_id).exists():
@@ -54,6 +59,8 @@ def details(request,product_id):
         'owner':owner,
         'win':win,
         'active':active,
+        'comm':comm,
+        'comment':comment,
         })
     else: 
         return render(request,'auctions/details.html',{
@@ -83,6 +90,22 @@ def bid(request,product_id):
             bidform=BidForm(instance=bidi)
             return details(request, product_id)
     return HttpResponseRedirect(reverse("details", args=(product_id,)))
+    
+def add_comment(request,product_id):
+    product=get_object_or_404(listing,pk=product_id)
+    if request.method=='POST':
+        prod=Comment(user=request.user,item=product)
+        form=CommentForm(request.POST,instance=prod)
+        if form.is_valid():
+            comment=form.save()
+            comment.user=request.user
+            comment.item=product
+            comment.save()
+            return HttpResponseRedirect(reverse("details", args=(product_id,)))
+    else:
+        form=CommentForm()
+        return details(request, product_id)
+    return HttpResponseRedirect(reverse("index", args=(product_id,)))
 
 def watchlist(request):
     current_user_watchlist, created = Watchlist.objects.get_or_create(user = request.user)

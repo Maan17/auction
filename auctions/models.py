@@ -40,6 +40,8 @@ class Comment(models.Model):
     item=models.ForeignKey(listing,on_delete=models.CASCADE)     
     comment=models.TextField()
     date=models.DateTimeField(default=timezone.now)  
+    def __str__(self):
+        return f"{self.user}  : {self.comment}"
 
 class Watchlist(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
