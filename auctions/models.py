@@ -21,10 +21,15 @@ class listing(models.Model):
     title=models.CharField(max_length=50)
     desc=models.TextField()
     active=models.BooleanField(default="True")
-    winner=models.CharField(max_length=64,default="")
+    winner=models.CharField(max_length=64,default="", null=True)
     initial_amt=models.IntegerField()
     image=models.ImageField(upload_to='product')
     category=models.CharField(max_length = 20, choices =CHOICES)
+    published_date = models.DateTimeField(default=timezone.now)
+
+    def publish(self):
+        self.published_date = timezone.now()
+        self.save()
     def __str__(self):
         return f"Item ID: {self.id} | Title: {self.title}"
 

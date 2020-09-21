@@ -8,11 +8,11 @@ from .forms import listingForm,BidForm,CommentForm
 from django.contrib import messages
 
 def index(request):
-    infos=listing.objects.filter(active=True)
+    infos=listing.objects.filter(active=True).order_by('published_date')
     return render(request, "auctions/index.html",{'infos':infos})
 
 def create(request):
-    infos=listing.objects.all(active=True)
+    infos=listing.objects.filter(active=True)
     form = listingForm(request.POST, request.FILES)
     if form.is_valid():
         item = form.save(commit=False)
@@ -25,6 +25,14 @@ def create(request):
 def all_listings(request):
     product=listing.objects.all()
     return  render(request,'auctions/all_listings.html',{'product':product})
+
+def categories(request):
+    infos=listing.objects.filter(active=True)
+    return  render(request,'auctions/categories.html',{'infos':infos})
+
+def category_page(request,category_id):
+    infos=listing.objects.filter(category=category_id)
+    return  render(request,'auctions/category_page.html',{'infos':infos})
 
 def details(request,product_id):
     detail=get_object_or_404(listing,pk=product_id)

@@ -1,0 +1,15 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+    <table>
+        {% for info in infos %}
+        <tr>
+            <td>
+                <a href="{% url 'category_page' info.category %}">{{ info.get_category_display }}</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}
