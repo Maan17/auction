@@ -3,21 +3,15 @@
 {% block body %}
     <h2>Listings</h2>
     <table>
-        <tr id="img-col">
-            <img src="{{ info.image.url }}">
-        </tr>
-        <tr>
-            <td id="right-col">
+        <tr >
+            <td id="detail-img">
+                <img src="{{ info.image.url }}">
+            </td>
+            <td id="detail-desc">
                 <h5>{{ info.title }}</h5>
                 <p>{{ info.desc }}</p>
-                <tr>
-                    <td>
-                        <h6>Starting Bid: ${{ info.initial_amt }}</h6>
-                    </td>
-                    <td>
-                        <h6>Current Bid: ${{ current }}</h6>
-                    </td>
-                </tr>
+                <h6>Starting Bid: ${{ info.initial_amt }}</h6>
+                <h6>Current Bid: ${{ current }}</h6>
                 {% if user.is_authenticated %}
                     {% if win %}
                         <div class="alert alert-success" role="alert">
@@ -68,7 +62,12 @@
                             <h4 class="alert-heading">Bid Closed</h4>
                         </div>  
                     {% endif %}
-                        <form action="{% url 'add_comment' info.id %}" enctype="multipart/form-data" method="POST">
+                        
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <form action="{% url 'add_comment' info.id %}" enctype="multipart/form-data" method="POST">
                             {% for comment in comment %}{% load widget_tweaks %}
                                 <div class="form-group">
                                     <label for="{{ comment.id_for_label }}">Add Comment</label>{% csrf_token %}
@@ -78,13 +77,13 @@
                                 <div class="form-group">
                                     <button type="submit" class="btn btn-primary">Post</button>
                                 </div>
-                        </form>
-                        <h4>Comments</h4>
-                        {% for comm in comm %}
-                            <h5>{{ comm.user }}</h5>
-                            <h6>{{ comm.comment }}</h6>
-                        {% endfor %}  
-                {% endif %}
+                        </form> 
+                <h4>Comments</h4>
+                {% for comm in comm %}
+                    <h5>{{ comm.user }}</h5>
+                    <h6>{{ comm.comment }}</h6>
+                {% endfor %} 
+                {% endif %} 
             </td>
         </tr>
     </table>

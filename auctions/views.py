@@ -8,7 +8,7 @@ from .forms import listingForm,BidForm,CommentForm
 from django.contrib import messages
 
 def index(request):
-    infos=listing.objects.filter(active=True).order_by('published_date')
+    infos=listing.objects.filter(active=True).order_by('-published_date')
     return render(request, "auctions/index.html",{'infos':infos})
 
 def create(request):
@@ -18,7 +18,7 @@ def create(request):
         item = form.save(commit=False)
         item.owner = request.user
         item.save()
-        return render(request, "auctions/index.html", {'infos':infos})
+        return index(request)
     else:
        return render(request, 'auctions/create.html', {'form': form})
 

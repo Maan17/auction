@@ -36,6 +36,8 @@ a:hover{
     background-color: #563d7c;
     margin-left: -1%;
     margin-right: -1%;
+    position: relative;
+    
 }
 
 .nav-link {
@@ -73,3 +75,24 @@ a:hover{
     background-color: #563d7c;
     border-color: #563d7c;
 }
+
+#detail-img {
+    float: left;
+    width: 30%;
+    background: #ccc;
+    padding: 20px;
+}
+
+#detail-desc {
+    float: left;
+    padding: 20px;
+    width: 70%;
+}
+
+@media screen and (max-width: 1000px) {
+    #detail-img, #detail-desc {
+      width: 100%;
+      height: auto;
+    }
+}
+
