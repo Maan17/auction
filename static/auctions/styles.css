@@ -78,21 +78,84 @@ a:hover{
 
 #detail-img {
     float: left;
-    width: 30%;
-    background: #ccc;
+    width: 50%;
     padding: 20px;
+    display:table;
 }
 
 #detail-desc {
     float: left;
     padding: 20px;
-    width: 70%;
+    width: 50%;
 }
 
-@media screen and (max-width: 1000px) {
+.form-inline{
+    display:contents;
+}
+
+footer {
+    background-color:  #563d7c;
+    padding: 10px;
+    text-align: center;
+    color: white;
+    margin-top: 50px;
+  }
+
+.form-control:focus {
+    border-color: #563d7c !important;
+    box-shadow: 0 0 0 0.2rem #c8bdd8 !important;
+} 
+
+.form-control::-webkit-input-placeholder { color:  #563d7c; } 
+
+#link:link, #link:visited {
+    background-color: #563d7c;
+    color: white;
+    padding: 14px 25px;
+    border-radius: 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    margin:25px;
+  }
+  
+#link:hover, #link:active {
+    background-color: #ac92d3;
+  }
+
+  .col-md-3 {
+    display: inline-block;
+    margin-left: -4px;
+}
+
+.col-md-3 {
+    width: 100%;
+    height: auto;
+}
+
+
+body .no-padding {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+div.card-body{
+    margin-left: 20%;
+}
+
+div.card{
+    border:none;
+}
+@media screen and (max-width: 600px) {
     #detail-img, #detail-desc {
       width: 100%;
       height: auto;
     }
 }
 
+@media (min-width: 576px){
+.form-inline .form-group {
+    margin-top: 5%;
+    margin-bottom: 5%;
+}
+}

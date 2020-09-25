@@ -1,20 +1,20 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Create Listings</h2>
-    
+    <h2 style="text-align:center">Create Listings</h2>
+    <div class="container">
     <form method="POST" enctype="multipart/form-data">
         {% csrf_token %}{% load widget_tweaks %}
         <div class="form-group row">
             <label for="{{ form.id_title}}" class="col-sm-2 col-form-label">Title</label>
-            <div class="col-sm-10">
-                {{ form.title |add_class:"form-control" }}
+            <div class="col-sm-10" >
+                {{ form.title |add_class:"form-control"  }}
             </div>
         </div>
         <div class="form-group row">
             <label for="{{ form.id_desc}}" class="col-sm-2 col-form-label">Description</label>
             <div class="col-sm-10">
-                {{ form.desc |add_class:"form-control" }}
+                {{ form.desc |add_class:"form-control"|attr:"rows:" }}
             </div>
         </div>
         <div class="form-group row">
@@ -35,11 +35,12 @@
                 {{ form.category|add_class:"form-control" }}
             </div>
         </div>
-        <div class="form-group row">
+        <div class="form-group row" style="float:right;">
             <div class="col-sm-10">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" >Submit</button>
             </div>
         </div>
     </form>
+</div>
 {% endblock %}
             

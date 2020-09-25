@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render,get_object_or_404,redirect
 from django.urls import reverse
-from .models import listing,Watchlist,Bid,User,Comment
+from .models import listing,Watchlist,Bid,User,Comment,CHOICES
 from .forms import listingForm,BidForm,CommentForm
 from django.contrib import messages
 
@@ -23,15 +23,17 @@ def create(request):
        return render(request, 'auctions/create.html', {'form': form})
 
 def all_listings(request):
-    product=listing.objects.all()
+    product=listing.objects.all().order_by('-published_date')
     return  render(request,'auctions/all_listings.html',{'product':product})
 
 def categories(request):
-    infos=listing.objects.filter(active=True)
-    return  render(request,'auctions/categories.html',{'infos':infos})
+    category=CHOICES
+    return  render(request,'auctions/categories.html',{
+        'category':category,
+        })
 
-def category_page(request,category_id):
-    infos=listing.objects.filter(category=category_id)
+def category_page(request,category):
+    infos=listing.objects.filter(category=category,active=True)
     return  render(request,'auctions/category_page.html',{'infos':infos})
 
 def details(request,product_id):
@@ -93,7 +95,9 @@ def bid(request,product_id):
                 response=res.amount
                 if current_price>response:
                     res.delete()
-                    return HttpResponseNotFound('<h1>Place greater bid</h1>')
+                    less_bid=True
+                    messages.error(request, 'Your Bid should be greater than current bid.')
+                    return details(request, product_id)
         else:
             bidform=BidForm(instance=bidi)
             return details(request, product_id)
@@ -125,13 +129,13 @@ def watchlist_add(request, product_id):
     user_list, created = Watchlist.objects.get_or_create(user=request.user)
     user_list.item.add(item_to_save)
     #messages.add_message(request, messages.SUCCESS, "Successfully added to your watchlist")
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("watchlist"))
 
 def watchlist_del(request,product_id):
     item_to_del=get_object_or_404(listing, pk=product_id)
     user_list= Watchlist.objects.get(user=request.user)
     user_list.item.remove(item_to_del)
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("watchlist"))
 
 def close_bid(request,product_id):
     item_to_close=get_object_or_404(listing, pk=product_id)

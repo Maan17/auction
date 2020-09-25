@@ -12,6 +12,7 @@
                 <a href="{% url 'details' info.id %}"><h5>{{ info.title }}</h5></a>
                 <p>{{ info.desc }}</p>
                 <h6>Price: ${{ info.initial_amt }}</h6>
+            </td>
         </tr>
         {% endfor %}
     </table>

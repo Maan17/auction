@@ -17,5 +17,5 @@ urlpatterns = [
     path("all_listings",views.all_listings,name="all_listings"),
     path("add_comment/<int:product_id>",views.add_comment,name="add_comment"),
     path("categories",views.categories,name="categories"),
-    path("category_page/<int:category_id>",views.category_page,name="category_page"),
+    path("category_page/<str:category>",views.category_page,name="category_page"),
 ]

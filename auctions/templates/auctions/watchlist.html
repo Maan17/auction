@@ -1,15 +1,17 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Watchlist</h2>
+    <h2 style="text-align:center">Watchlist</h2>
     <table>
         {% for items in item %}
         <tr>
             <td id="img-col">
-                <img src="{{ items.image.url }}">
+                {% if items.image %}
+                    <a href="{% url 'details' items.id %}"><img src="{{ items.image.url }}"></a>
+                {% endif %}
             </td>
             <td id="right-col">
-                <h5>{{ items.title }}</h5>
+                <a href="{% url 'details' items.id %}"><h5>{{ items.title }}</h5></a>
                 <p>{{ items.desc }}</p>
                 <h6>Price: ${{ items.initial_amt }}</h6>
             </td>

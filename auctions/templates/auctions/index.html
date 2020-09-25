@@ -6,7 +6,9 @@
         {% for info in infos %}
         <tr>
             <td id="img-col">
+                {% if info.image %}
                 <a href="{% url 'details' info.id %}"><img src="{{ info.image.url }}"></a>
+                {% endif %}
             </td>
             <td id="right-col">
                 <a href="{% url 'details' info.id %}"><h5>{{ info.title }}</h5></a>

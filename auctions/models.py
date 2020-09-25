@@ -21,9 +21,9 @@ class listing(models.Model):
     title=models.CharField(max_length=50)
     desc=models.TextField()
     active=models.BooleanField(default="True")
-    winner=models.CharField(max_length=64,default="", null=True)
+    winner=models.CharField(max_length=64,default="", null=True,blank=True)
     initial_amt=models.IntegerField()
-    image=models.ImageField(upload_to='product')
+    image=models.ImageField(upload_to='product',null=True,blank=True)
     category=models.CharField(max_length = 20, choices =CHOICES)
     published_date = models.DateTimeField(default=timezone.now)
 

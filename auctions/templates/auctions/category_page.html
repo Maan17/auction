@@ -1,12 +1,14 @@
 {% extends "auctions/layout.html" %}
 
 {% block body %}
-    <h2>Active Listings</h2>
+    <h2 style="text-align:center">Active Listings</h2>
     <table>
         {% for info in infos %}
         <tr>
             <td id="img-col">
-                <a href="{% url 'details' info.id %}"><img src="{{ info.image.url }}"></a>
+                {% if info.image %}
+                    <a href="{% url 'details' info.id %}"><img src="{{ info.image.url }}"></a>
+                {% endif %}
             </td>
             <td id="right-col">
                 <a href="{% url 'details' info.id %}"><h5>{{ info.title }}</h5></a>
