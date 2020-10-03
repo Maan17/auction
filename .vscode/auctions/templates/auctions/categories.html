@@ -1,0 +1,27 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 style="text-align:center">Categories</h2>
+    <div class="container">
+        <div id="demo" class="carousel slide my-3" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    
+                    <div class="row">
+                        {% for categor in category %}
+                        <div class="col-xs-3 col-sm-3 col-md-3">
+                            <div class="card" style="width: 18rem;">
+                                <!--<img src="{{ categor.0.1 }}" class="card-img-top" style="width:150px;height:150px;">-->
+                                <div class="card-body">
+                                    <!--<p class="card-text">{{ categor.0 }}</p>-->
+                                    <a href="{% url 'category_page' categor.0 %}"class="btn btn-primary">{{ categor.1 }}</a><br>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>	
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 style="text-align:center">All Listings</h2>
+    <table>
+        {% for all in product %}
+        <tr>
+            <td id="img-col">
+                {% if all.image %}
+                    <a href="{% url 'details' all.id %}"><img src="{{ all.image.url }}"></a>
+                {% endif %}
+            </td>
+            <td id="right-col">
+                <a href="{% url 'details' all.id %}"><h5>{{ all.title }}</h5></a>
+                <p>{{ all.desc }}</p>
+                <h6>Price: ${{ all.initial_amt }}</h6>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    
+{% endblock %}

@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{% block title %}SellHere{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+        <meta content="width=device-width, initial-scale=1" name="viewport" />
+        
+    </head>
+    <body>
+        <h1 style="font-family:tahoma; font-weight:bold;color:#563d7c">Sel!Here</h1>
+        <div id="user-name">
+            {% if user.is_authenticated %}
+                Signed in as <strong>{{ user.username }}</strong>.
+            {% else %}
+                Not signed in.
+            {% endif %}
+        </div>
+        <ul class="nav">
+            <li class="nav-item" >
+                <a class="nav-link" href="{% url 'index' %}" style="transform: translate(140%, 0%);" >Active Listings</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'all_listings' %}" style="transform: translate(170%, 0%);">All Listings</a>
+            </li>
+            {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'create_listings' %}" style="transform: translate(130%, 0%);">Create Listings</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'watchlist' %}" style="transform: translate(180%, 0%);">Watchlist</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'categories' %}" style="transform: translate(160%, 0%);">Categories</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'logout' %}" style="transform: translate(190%, 0%);">Log Out</a>
+                </li>
+            {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'login' %}" style="transform: translate(250%, 1%);">Log In</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'register' %}" style="transform: translate(230%, 1%);">Register</a>
+                </li>
+            {% endif %}
+        </ul>
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>
